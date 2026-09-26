@@ -39,3 +39,23 @@ Storm 10x ~270 tx/s. **Network accepted ~1,700 tx/s**, which is about 3.7x the r
 - Runner burn ~6.4k TKAS/min at 5,000 sompi/g. Storm 10x ~320 tx/s (165 TKAS/min; its pool is 81.6k, and the external mempool backlog keeps it tapered).
 - **Our TPS ≈ 1,500/s; network accepted ≈ 1,620/s.** Mempool max 66k, disk 18.6 G, RAM available 6.3 G, load 11.5 on 8 cores (4 cores are busy with CPU miners).
 - Mature faucet 21k TKAS (miners pay in ~1k/min plus ~57% of burned fees).
+
+## Process E totals 10:38 → 12:25
+- ttt: 3,842,503 submitted / 3,841,174 accepted, 467,891 games / 456,892 finished, 0 rejects, 843,210 illegal / 0 executed.
+- vprog: 3,869,642 / 3,868,332, 364,897 programs / 354,294 halted, 0 rejects, 701,379 illegal / 0 executed.
+- Combined: about 1,200 tx/s own. Fee counters: 326k + 344k TKAS.
+- Faucet mature grew 107.9k → 133.7k from 11:19 to 12:19 (+2.8k to +4.3k per 10 min). Income from 5 miners plus fee flow-back exceeded the burn.
+
+## 12:19–12:31 direction change (user)
+- The storm supervisor and H lane were stopped, because storm fees largely returned to our own mining address.
+  - Storm-lite P0–P7 run at 100 tx/s total, with FEE_MULT read live from `/tmp/r6-storm-mult`.
+  - Storm keys 0–399 are queued for a sweep to the faucet.
+- Miners 5 → 2, keeping gb001 and knsbot. Stopped: storm keepalive, gb002 and the pool miner (restore cmds in `ramp.log`). Why: less income flowing back to the faucet, while the nodes stay healthy.
+- Fee rule: feerate = max(2 × getFeeEstimate normal, 200) sompi/g, every 30 s (`scripts/r6-feerate.py`, logged in `logs/round6/feerate.jsonl`).
+  - 12:22 normal 864.6 → 1,729 used.
+  - 12:26–12:28 normal ~193 → ~385 used, because the estimate dropped once the storm was cut.
+- The 12:31 relaunch put ttt/vprog at 800 lanes each. The faucet split by txid hash is now ttt `h%4==0`, vprog `h%2==1`, KNS `h%4==2`, which removes an overlap between ttt and KNS.
+  - At 800+800/s the mempool reached 72.9k and p50 was ~18 s, so the rates went to 650+650.
+- KNS runner `r6-kns.mjs` A, 40 workers: 753 created of 1,299 attempts in the first ~2 min.
+- Mature faucet 133.7k (12:19) → 86.0k (12:28): **now draining.**
+- Stop rule: all funds < 3k for 15 min, or 20:00. Pruning pause from 18:30 (see README §6).

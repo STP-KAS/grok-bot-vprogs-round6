@@ -10,7 +10,9 @@
 import { readFileSync, writeFileSync, existsSync, appendFileSync, statSync } from "node:fs";
 import { kaspa, connect, log, sleep, NET, deskKey, addrOf } from "./lib.mjs";
 const [TAG, WF, WT, P2F, P2T, DF, DT] = process.argv.slice(2).map((x, i) => i === 0 ? x : Number(x));
-const COOL = Number(process.env.COOL || 4000), FEE_MULT = Number(process.env.FEE_MULT || 1);
+const COOL = Number(process.env.COOL || 4000); let FEE_MULT = Number(process.env.FEE_MULT || 1);
+// r6: dynamic fee (2x normal estimate) via /tmp/r6-storm-mult; cached per-tx fees are reset when it changes
+setInterval(() => { try { const m = Number(readFileSync("/tmp/r6-storm-mult", "utf8").trim()); if (m >= 2 && m !== FEE_MULT) { FEE_MULT = m; MASS1 = null; TAGFEE = null; FEE2 = null; P2FEE = BigInt(Math.ceil(571 * 100 * FEE_MULT)); } } catch {} }, 30000);
 const MIN = BigInt(process.env.MIN_SOMPI || 10000000); // drop leftovers < MIN (default 0.1 TKAS; r5 env MIN_SOMPI)
 const LOW = Number(process.env.LOW || 4000), REFILL = Number(process.env.REFILL || 2000);
 const DIR = "/workspace/tn10-break-test-2026-09-25";
@@ -40,7 +42,7 @@ await reconnect();
 const S = { sub: 0, ok: 0, err: 0, errs: {}, fees: 0n, lat: [], orphan: 0, pay: 0, dropped: 0, full: 0, refills: 0 };
 let senders = new Set(), receivers = new Set();
 const feeFor = (tx) => { const m = BigInt(kaspa.calculateTransactionMass(NET, tx)); return { m, fee: (m * BigInt(Math.round(100 * FEE_MULT))) }; };
-let MASS1 = null, TAGFEE = null, FEE2 = null; const PAY = BigInt(process.env.PAY || 0); const P2FEE = BigInt(Math.ceil(571 * 100 * FEE_MULT));
+let MASS1 = null, TAGFEE = null, FEE2 = null; const PAY = BigInt(process.env.PAY || 0); let P2FEE = BigInt(Math.ceil(571 * 100 * FEE_MULT));
 const q = []; let head = 0;
 // r5: PERTX_FEE=1 -> fee = actual mass (incl. KIP-9 storage mass) x feerate per tx (fixed TAGFEE underpays small UTXOs at high multipliers)
 const PERTX = process.env.PERTX_FEE === "1";

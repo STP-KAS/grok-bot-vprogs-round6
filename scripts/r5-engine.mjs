@@ -21,16 +21,16 @@ export const faucetAddr = FADDR;
 const RESF = "/tmp/r5-reserved-utxos.json";
 export function loadSeeds(subset) {
   let raw = []; try { raw = JSON.parse(readFileSync(RESF, "utf8")); } catch { return []; }
-  return raw.filter((u) => parseInt(u.outpoint.transactionId.slice(8, 16), 16) % 2 === (subset === 1 ? 0 : 1)) // r5 10:02: reserve = 100% of mature faucet UTXOs; ttt even, vprog odd
+  return raw.filter((u) => { const h = parseInt(u.outpoint.transactionId.slice(8, 16), 16); return subset === 1 ? h % 4 === 0 : h % 2 === 1; }) // r6 12:30: ttt h%4==0, vprog h%2==1, KNS h%4==2 (r6-kns.mjs)
     .map((u) => ({ txid: u.outpoint.transactionId, index: u.outpoint.index, amount: BigInt(u.utxoEntry.amount), daa: BigInt(u.utxoEntry.blockDaaScore) }));
 }
 
 // sompi/gram; live-tunable via /tmp/r5-feerate (re-read every 2 s), else env FEERATE
 let FR = BigInt(process.env.FEERATE || 20000);
-const rdFR = () => { try { const v = BigInt(readFileSync("/tmp/r5-feerate", "utf8").trim()); if (v >= 100n) FR = v; } catch {} };
+const rdFR = () => { try { const v = BigInt(readFileSync(existsSync("/tmp/r6-feerate") ? "/tmp/r6-feerate" : "/tmp/r5-feerate", "utf8").trim()); if (v >= 200n) FR = v; } catch {} }; // r6: dynamic 2x normal estimate
 rdFR(); setInterval(rdFR, 2000);
 export const feerate = () => FR;
-const FUND_FR = BigInt(process.env.FUND_FEERATE || 5000); // funding txs have up to 16 inputs -> lower (still 5x storm) feerate
+const FUND_FR_ENV = process.env.FUND_FEERATE; const fundFR = () => FUND_FR_ENV ? BigInt(FUND_FR_ENV) : FR; // r6: funding uses the same dynamic 2x-normal rule
 const MINCH = BigInt(process.env.MINCH_SOMPI || 100000000); // stop a chain below 1 TKAS (storage mass grows as the balance shrinks)
 
 function feeFor(tx) { return BigInt(kaspa.calculateTransactionMass(NET, tx)) * feerate(); }
@@ -73,7 +73,7 @@ export function fundChain(seeds, payloadHex) {
   const total = seeds.reduce((a, s) => a + s.amount, 0n);
   let tx = kaspa.createTransaction(ins, [{ address: addr, amount: total - 1n }], 0n, payloadHex, 1);
   kaspa.signTransaction(tx, [FKEY], false);
-  const fee = BigInt(kaspa.calculateTransactionMass(NET, tx)) * FUND_FR; const amt = total - fee;
+  const fee = BigInt(kaspa.calculateTransactionMass(NET, tx)) * fundFR(); const amt = total - fee;
   if (amt < MINCH) return null;
   tx = kaspa.createTransaction(ins, [{ address: addr, amount: amt }], 0n, payloadHex, 1);
   kaspa.signTransaction(tx, [FKEY], false);
