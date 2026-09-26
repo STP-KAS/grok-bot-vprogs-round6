@@ -31,3 +31,11 @@ Storm keys 0–399 (56.4k TKAS) are the live H-lane working pool, so the storm k
 | fee burn | ~3.2k TKAS/min | ~3.3k TKAS/min |
 
 Storm 10x ~270 tx/s. **Network accepted ~1,700 tx/s**, which is about 3.7x the round-5 average. Mempool max 78.4k at 800+800/s → runner rates set to 600+600.
+
+## Steady state 10:43
+- ttt: 600 lanes, **600 moves/s** submitted, 595/s accepted, p50 1.7 s / p95 13.3 s. 23,022 games / 22,292 finished since 10:38.
+- vprog: 600 lanes, **600 steps/s**, 601/s accepted, p50 2.2 s / p95 86 s. The p95 tail is chains that lost priority during the 800/s burst and are draining. 20,513 programs / 19,862 halted.
+- 0 rejects. Illegal attempts 80,723, **0 executed**.
+- Runner burn ~6.4k TKAS/min at 5,000 sompi/g. Storm 10x ~320 tx/s (165 TKAS/min; its pool is 81.6k, and the external mempool backlog keeps it tapered).
+- **Our TPS ≈ 1,500/s; network accepted ≈ 1,620/s.** Mempool max 66k, disk 18.6 G, RAM available 6.3 G, load 11.5 on 8 cores (4 cores are busy with CPU miners).
+- Mature faucet 21k TKAS (miners pay in ~1k/min plus ~57% of burned fees).
