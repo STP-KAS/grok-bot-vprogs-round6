@@ -21,7 +21,7 @@ export const faucetAddr = FADDR;
 const RESF = "/tmp/r5-reserved-utxos.json";
 export function loadSeeds(subset) {
   let raw = []; try { raw = JSON.parse(readFileSync(RESF, "utf8")); } catch { return []; }
-  return raw.filter((u) => { const h = parseInt(u.outpoint.transactionId.slice(8, 16), 16); return subset === 1 ? h % 4 === 0 : h % 2 === 1; }) // r6 12:30: ttt h%4==0, vprog h%2==1, KNS h%4==2 (r6-kns.mjs)
+  return raw.filter((u) => { const h = parseInt(u.outpoint.transactionId.slice(8, 16), 16); return subset === 1 ? h % 8 === 0 : h % 8 === 4; }) // r6 12:37: ttt h%8==0, vprog h%8==4, KNS h%4!=0 (r6-kns2.mjs, 3/4 of faucet: best TKAS-per-disk burner)
     .map((u) => ({ txid: u.outpoint.transactionId, index: u.outpoint.index, amount: BigInt(u.utxoEntry.amount), daa: BigInt(u.utxoEntry.blockDaaScore) }));
 }
 

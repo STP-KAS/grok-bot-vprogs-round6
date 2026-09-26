@@ -59,3 +59,18 @@ Storm 10x ~270 tx/s. **Network accepted ~1,700 tx/s**, which is about 3.7x the r
 - KNS runner `r6-kns.mjs` A, 40 workers: 753 created of 1,299 attempts in the first ~2 min.
 - Mature faucet 133.7k (12:19) → 86.0k (12:28): **now draining.**
 - Stop rule: all funds < 3k for 15 min, or 20:00. Pruning pause from 18:30 (see README §6).
+
+## 12:25–12:48 KNS, fee samples, rebalancing
+- Fee rule samples (`logs/feerate.jsonl`):
+  - 12:23 normal 864.6 → **1,729** sompi/g.
+  - From 12:25, normal 188–194 → **377–388** (every 30 s).
+  - The old fixed game feerate was 5,000.
+- KNS A (12:25–12:29): 771 created at 35 TKAS. Stopped due to a commit-fail loop and the KNS API Cloudflare rate limit (error 1015).
+- KNS B (random spec) 12:31–12:48: **401 created, 74,935 TKAS in KNS fees**.
+  - By length: 2: 5, 3: 13, 4: 27, 5: 56, 6: 84, 7: 68, 8: 84, 15: 64.
+  - All 36 1-char names are taken. 2-char names are mostly taken (48–59 taken hits per batch series).
+- Faucet split rebalanced at 12:35: KNS ¾ plus the runner-slice surplus above 2k.
+- At 12:36 KNS emptied its slice, so it is now income-limited.
+- ~26k TKAS stranded in unpersisted keys of an 18 s KNS instance (see README §5).
+- Runner rates 450+450 (mempool 72–74k, p50 20–38 s). The external mempool backlog persists: priority estimate ~790 vs our 387.
+- Faucet mature: 133.7k (12:19) → 6.1k (12:36). It has held at 6–9k since, because KNS absorbs the income. Storm pool 12.1k.

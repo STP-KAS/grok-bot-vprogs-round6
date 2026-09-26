@@ -1,4 +1,4 @@
-# grok-bot-vprogs round 6 — INTERIM report (live since 10:35 CEST, 26 Sep 2026; updated 12:35 CEST)
+# grok-bot-vprogs round 6 — INTERIM report (live since 10:35 CEST, 26 Sep 2026; updated 12:50 CEST)
 
 Private report by Grok, acting for stp. Kaspa **TN10 only**.
 Previous rounds: [round 5 final (09:22–10:35)](https://github.com/STP-KAS/grok-bot-vprogs-round5) · [round 4 final](https://github.com/STP-KAS/grok-bot-vprogs-round4).
@@ -42,7 +42,7 @@ Runner fixes at 10:38: orphan retry at funding, stale-resume classification, see
 | round-3 issuers | 533 |
 | round-4 ttt-g | 83 |
 
-- Storm keys 0–399, the former live storm pool, are being swept now (12:23–) because the storm was lowered. The total follows in the final report.
+- Storm keys 0–399 were swept after the storm cut: **2,495 TKAS from 125 wallets (148 txs)**, because the storm had already spent most of that pool. **Swept total: 84,418 TKAS.**
 - The Grok Build wallet is excluded in code and never spent.
 
 ## 3. The 12:20 direction change
@@ -54,9 +54,9 @@ Runner fixes at 10:38: orphan retry at funding, stale-resume classification, see
   - Stopped: the storm keepalive miner, gb002 and the pool miner.
   - Why: less mining income flowing back to the faucet, so the pool actually drains, while the local nodes stay healthy.
   - The restore commands are logged.
-- **Runners relaunched at 12:31** on the same tag, resuming the persisted chains.
-  - Faucet UTXOs are split between senders by txid hash, so they never double-spend: ttt takes `h%4==0`, vprog `h%2==1`, KNS `h%4==2`.
-  - 800+800/s pushed the mempool to 72.9k with p50 18 s, so the rates are now **650+650/s**.
+- **Runners relaunched at 12:25 and 12:35** on the same tag, resuming the persisted chains.
+  - Faucet UTXOs are split between senders by txid hash, so they never double-spend. Since 12:35, KNS takes `h%4!=0` (¾, because KNS is the biggest burner per byte of disk) plus the surplus of the runner slice above a 2k reserve; ttt takes `h%8==0` and vprog `h%8==4`.
+  - Rates stepped 800 → 650 → 550 → **450+450/s** because the mempool sat at 72–74k and p50 latency rose to 20–38 s.
 - **The faucet now drains.** Mature faucet funds went 133.7k (12:19) → 86.0k TKAS (12:28): chain funding plus KNS.
   - Before the change, the faucet grew by about +2.8k to +4.3k per 10 min.
 
@@ -70,22 +70,37 @@ Runner fixes at 10:38: orphan retry at funding, stale-resume classification, see
 | time | normal estimate | used |
 |---|---:|---:|
 | 12:22 | 864.6 | **1,729** |
-| 12:26–12:28 | 192–194 | **383–387** |
+| 12:25–12:48 | 188–194 | **377–388** |
 
 - The normal estimate fell once the storm was cut, so the per-tx cost is now far below the old fixed 5,000.
 
-## 5. KNS (TN10) bulk creates — started 12:31
+## 5. KNS (TN10) bulk creates — started 12:25
 - Scripted commit/reveal against the public KNS TN10 indexer, one pass per worker. Each chains the next create on the reveal change. It uses our own node, without utxoindex.
-- **First run, 12:31–12:33** (40 workers, labels `stp-r6-…`): 1,299 attempts, **753 created (about 6 creates/s)**.
+- **First run (A), 12:25–12:29** (40 workers, labels `stp-r6-…`): 1,299 attempts, **753 created (about 6 creates/s)**.
   - Failures: 63 commit, 6 reveal, 2 funding, 2 check.
   - Latency submit→reveal: p50 75 ms / p95 157 ms.
-- **Spec from 12:27** (being switched in now):
+  - A was stopped because failed commits looped on an already-spent worker UTXO, and 40 unthrottled workers triggered the KNS API's Cloudflare rate limit (error 1015). A total: **771 created**.
+- **Random-name runner (B, `scripts/r6-kns2.mjs`) from 12:31**, per the 12:27 spec:
   - Fully random names from `[a-z0-9]`, the charset the KNS indexer accepts.
   - Length is uniform 1–8, with a ~10% chance of 15.
   - Each name's owner is a random address from a pool of freshly generated throwaway TN10 wallets (keys kept owner-only on the box, never printed or committed).
   - A taken name is retried with a new random name. Taken, retries and invalid are counted separately.
   - KNS price tiers: 1–2 chars 4,200; 3 chars 2,100; 4 chars 525; 5+ chars 35 TKAS. Short names burn TKAS fastest.
-  - The length distribution and success rate go in the final report.
+  - The owner key is the only signer of the reveal. Each name's check is batched (50 names per call) and throttled.
+  - If the faucet can't fund the drawn length, the worker redraws among lengths it can afford; this is counted as `unaffordable`.
+- **B so far (12:31–12:48): 401 created, 74,935 TKAS in KNS fees.**
+
+  | length | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 15 |
+  |---|---:|---:|---:|---:|---:|---:|---:|---:|
+  | created | 5 | 13 | 27 | 56 | 84 | 68 | 84 | 64 |
+
+  - No 1-char names: all 36 are taken. 2-char names are mostly taken.
+  - Short names are under-represented because the faucet can't fund 2,100–4,200 TKAS names from income.
+  - Commit/reveal failures ≈0 since v2.
+- **KNS indexer lag:** the indexer lags the DAG by about 235k DAA (`NG is lagging behind BlockDag`), so ownership can't be verified yet. The runner samples `GET /{domain}/owner`, and the final report re-checks.
+- **Loss note:** a KNS worker instance that ran for only 18 s (12:35:23–12:35:41) was restarted to add worker-key persistence. It held an estimated **~26k TKAS** of top-ups in in-memory worker keys, now unrecoverable, so those coins are effectively burned.
+  - Estimate: faucet drop 77.8k minus 51.3k KNS fees in 12:35:20–12:36:24.
+  - Worker keys are persisted (owner-only) since 12:36, and a restart now adopts their coins.
 
 ## 6. Stop rule and pruning protection
 - **Stop when all funds are gone, backstop 20:00 CEST.** "Gone" means the mature faucet plus the storm pool stays below 3k TKAS for 15 min.
@@ -94,7 +109,13 @@ Runner fixes at 10:38: orphan retry at funding, stale-resume classification, see
   - At 18:30, all senders pause. Regenerable junk is cleaned to reach ≥20 G free.
   - If there is still <20 G at 18:45, the node is stopped cleanly and restarted once space is OK.
   - Senders resume when the n0 log shows the pruning has completed ("SMT pruning complete") and disk usage is stable. They then run until 20:00 or until the funds are gone.
-- During the run, senders pause below 13 G free disk; the hard floor is 8 G. The mempool brake is 80k.
+- During the run, ttt/vprog/storm pause below 13 G free disk (resume above 14 G); the hard floor is 8 G, which triggers the final stop.
+  - KNS is exempt from the 13 G pause because it writes almost nothing to disk per TKAS burned. It pauses only for pruning.
+- Storm guard: mempool >80k sets the storm to 0; it resumes below 40k.
+- Watcher: `scripts/r6-final-watch.py` (log `logs/round6/final-watch.jsonl`).
+- **Outlook:** disk was 13.7 G at 12:46 and falling about 1 G per 15 min, so ttt/vprog/storm will hit the 13 G pause around 13:00 and stay paused until disk frees up (the pruning around 19:00). KNS keeps draining.
+  - Mining income (2 miners) keeps arriving and KNS burns it continuously. The storm pool (12k) drains slowly.
+  - The "all funds < 3k" stop may therefore not trigger before the 20:00 backstop.
 
 ## Safety
 - Keys are never printed or committed. The Grok Build wallet is never spent. Processes are killed only by exact pid. `tools/secret-scan.sh` runs before every push.
