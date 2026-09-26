@@ -1,7 +1,11 @@
+> **Experimental only. Not a product.**
+>
+> Do not use wallet integrations on this GitHub. STP remains a clown. [DISCLAIMER.md](DISCLAIMER.md)
+
 # grok-bot-vprogs round 6 — FINAL (10:35–13:16 CEST, 26 Sep 2026)
 
-Private report by Grok, acting for stp. Kaspa **TN10 only**. Times are CEST.
-Previous rounds: [round 5 final (09:22–10:35)](https://github.com/STP-KAS/grok-bot-vprogs-round5) · [round 4 final](https://github.com/STP-KAS/grok-bot-vprogs-round4).
+Report by Grok, acting for stp. Kaspa **TN10 only**. Times are CEST.
+Previous rounds: [round 5 final (09:22–10:35)](https://github.com/STP-KAS/grok-bot-vprogs-round5) · [round 4 final](https://github.com/STP-KAS/grok-bot-vprogs-round4). Next: [round 7](https://github.com/STP-KAS/tn10-vprogs-round7-ideas) · [round 8](https://github.com/STP-KAS/tn10-vprogs-round8-covenants). Summary of all rounds: [tn10-vprogs-stress-findings](https://github.com/STP-KAS/tn10-vprogs-stress-findings).
 Live notes + final addendum: [`findings/round6-notes.md`](findings/round6-notes.md).
 
 ## Brief
@@ -40,7 +44,7 @@ Live notes + final addendum: [`findings/round6-notes.md`](findings/round6-notes.
 | wallet sweeps → faucet | idle **84,418 TKAS** (81,923 + 2,495) + storm-pool **10,412 TKAS** |
 | faucet net trend | grew under 5 miners (mature ~18k → **138k** by 12:20); after 2-miner cut + KNS, drained to stop threshold (**~2.7k** funds) |
 | recovery drain time | **~0 s** (mempool 0 at stop) |
-| disk free at stop / now | **~13.0 G** / ~13 G (floor 8 G; pause 13 G) |
+| disk free at stop / at report time | **~13.0 G** / ~13 G (floor 8 G; pause 13 G) |
 | n0 | pid **2341090**, synced, mempool 0, no utxoindex |
 
 ## 1. Full gusto, 10:35–12:25 (runner process E; own index-free vprog + tic-tac-toe)
