@@ -74,3 +74,23 @@ Storm 10x ~270 tx/s. **Network accepted ~1,700 tx/s**, which is about 3.7x the r
 - ~26k TKAS stranded in unpersisted keys of an 18 s KNS instance (see README §5).
 - Runner rates 450+450 (mempool 72–74k, p50 20–38 s). The external mempool backlog persists: priority estimate ~790 vs our 387.
 - Faucet mature: 133.7k (12:19) → 6.1k (12:36). It has held at 6–9k since, because KNS absorbs the income. Storm pool 12.1k.
+
+## 12:48–12:56 Storm stopped, storm pool swept into KNS funding (lead 12:50: "all TKAS gone")
+- Storm workers P0–P7 were stopped with SIGTERM by exact pid, and the storm rate set to 0.
+- The storm pool sat in the storm's P2SH tag wallets. These are anyone-can-spend on testnet (`MODE=p2w`), so no keys were involved.
+- It was swept to the faucet, which KNS draws from (¾ slice plus the runner-slice surplus above 2k), at the 2x-normal feerate:
+
+  | pass | source | TKAS | txs |
+  |---|---|---:|---:|
+  | 1 | worker state files | 5,995 | 5,011 |
+  | 2 | same, 10-input salvage | 299 | — |
+  | 3 | live public-API UTXO list | 4,118 | 2,822 |
+  | **total** | | **10,412** | |
+
+  Pass-3 failures were "already spent in the mempool", i.e. inputs my earlier passes had already taken.
+- The old storm state files (which included 2.5k of stale H-lane state) were archived, so the "storm pool" figure no longer inflates the watcher's funds total.
+- Mempool 73k → 1.9k after the storm stop.
+- **KNS after:** ~0.5 creates/s, ~20.8k TKAS of KNS fees per 10 min (the last 5 min: 159 created, 7.5k TKAS).
+  - B total so far: 616 created, 85,890 TKAS in KNS fees. Commit failures 7, reveal failures 0.
+  - The `unaffordable` count (1,838) rises because 2–4-char tiers can't be funded from income, so creates skew to 5+ chars.
+- Funds left at 12:56: mature faucet ~3.3k plus KNS workers ~0.3k. Income from the 2 miners is absorbed by KNS above the runners' 2k reserve.
