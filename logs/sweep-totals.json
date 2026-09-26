@@ -1,0 +1,68 @@
+[
+  {
+    "file": "storm-sweep-pass1.jsonl",
+    "t": "2026-09-26T10:49:47.744Z",
+    "ev": "start",
+    "utxos": 79470,
+    "tkas": 9549.44082738
+  },
+  {
+    "file": "storm-sweep-pass1.jsonl",
+    "t": "2026-09-26T10:50:10.405Z",
+    "ev": "done",
+    "txs": 5011,
+    "swept_tkas": 5995.21,
+    "fail_groups": 2733,
+    "fail_inputs": 27330
+  },
+  {
+    "file": "storm-sweep.jsonl",
+    "t": "2026-09-26T10:50:43.317Z",
+    "ev": "start",
+    "utxos": 79470,
+    "tkas": 9549.44082738
+  },
+  {
+    "file": "storm-sweep.jsonl",
+    "t": "2026-09-26T10:50:55.448Z",
+    "ev": "done",
+    "txs": 1276,
+    "swept_tkas": 298.71,
+    "fail_groups": 78185,
+    "fail_inputs": 78185
+  },
+  {
+    "file": "storm-sweep2.jsonl",
+    "t": "2026-09-26T10:54:16.947Z",
+    "ev": "done",
+    "txs": 2822,
+    "swept_tkas": 4117.7,
+    "fails": 2743
+  },
+  {
+    "file": "sweep.jsonl",
+    "t": "2026-09-26T08:38:51.202Z",
+    "ev": "done",
+    "wallets": 451,
+    "txs": 464,
+    "total_tkas": 81923.18,
+    "groups": {
+      "storm": 55379.34162283005,
+      "W": 5357.02340385,
+      "L": 20569.821245439998,
+      "round": 616.02326525,
+      "desk": 0.9662
+    }
+  },
+  {
+    "file": "sweep.jsonl",
+    "t": "2026-09-26T10:32:26.010Z",
+    "ev": "done",
+    "wallets": 125,
+    "txs": 148,
+    "total_tkas": 2495.11,
+    "groups": {
+      "storm": 2495.11194166
+    }
+  }
+]

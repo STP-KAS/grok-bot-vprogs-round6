@@ -94,3 +94,24 @@ Storm 10x ~270 tx/s. **Network accepted ~1,700 tx/s**, which is about 3.7x the r
   - B total so far: 616 created, 85,890 TKAS in KNS fees. Commit failures 7, reveal failures 0.
   - The `unaffordable` count (1,838) rises because 2–4-char tiers can't be funded from income, so creates skew to 5+ chars.
 - Funds left at 12:56: mature faucet ~3.3k plus KNS workers ~0.3k. Income from the 2 miners is absorbed by KNS above the runners' 2k reserve.
+
+## FINAL addendum (13:16 CEST stop — report finalized)
+
+**Stop:** 13:16:14 CEST — `funds 2697 < 3k TKAS for 15 min`. Disk pause since 13:06:29 (`disk<13G`). Pruning window (18:30) never reached. Recovery: mempool already 0; drain ≈ 0 s (`logs/recovery.jsonl`, 13 samples / 60 s).
+
+**Own runners (tag E, R6 segments summed):**
+| | submitted | accepted | games/programs | finished/halted | illegal exec | fee TKAS |
+|---|---:|---:|---:|---:|---:|---:|
+| ttt | 5,037,212 | 5,014,037 | 613,669 | 600,055 | 0 | 333,598 |
+| vprog | 5,080,337 | 5,043,987 | 478,013 | 465,967 | 0 | 351,586 |
+| **total** | **10,117,549** | **10,058,024** | | | **0** | **~685k** |
+
+Full-gusto (10:38–12:25) alone: 7.71 M txs, ~1,191 tx/s, p50 ~1.0 s. Network peak ~1,700 tx/s (10:41). Mempool max 78,319.
+
+**KNS final:** A 771 created (~27.0k TKAS at 35/name) + B 1,111 created (107.1k TKAS prices) = **1,883 creates**. B commit_fail events 11, reveal_fail 0. ~26k TKAS stranded in the 18 s unpersisted-worker restart (unchanged).
+
+**Sweeps:** keyed wallets 84,418 TKAS + storm-pool 10,412 TKAS → faucet. Grok Build untouched.
+
+**Faucet:** grew to mature ~138k by 12:20 under 5 miners; after 2-miner cut + KNS priority, drained to the &lt;3k/15 min stop. End-state mature faucet ~3.5–5k (mining income still arriving; senders halted).
+
+**Left running:** n0 2341090, miners gb001 + knsbot, feeder, feerate daemon. All senders dead; HALT files present. Disk ~13 G free.

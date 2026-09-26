@@ -1,0 +1,83 @@
+[
+  {
+    "t": "2026-09-26T10:37:57+0200",
+    "faucet_tkas": 90256.9,
+    "utxos": 1722,
+    "mature": 859,
+    "mature_tkas": 15839.6,
+    "storm_pool_tkas": 22021,
+    "low_for_s": 0
+  },
+  {
+    "t": "2026-09-26T11:21:53+0200",
+    "faucet_tkas": 123378.1,
+    "utxos": 8594,
+    "mature": 7942,
+    "mature_tkas": 109733.1,
+    "storm_pool_tkas": 16731,
+    "low_for_s": 0
+  },
+  {
+    "t": "2026-09-26T12:21:20+0200",
+    "faucet_tkas": 150131.7,
+    "utxos": 14125,
+    "mature": 13490,
+    "mature_tkas": 137317.3,
+    "storm_pool_tkas": 12547,
+    "low_for_s": 0
+  },
+  {
+    "t": "2026-09-26T12:38:29+0200",
+    "faucet_tkas": 9085.4,
+    "utxos": 2551,
+    "mature": 1939,
+    "mature_tkas": 6750.7,
+    "storm_pool_tkas": 12222,
+    "low_for_s": 0
+  },
+  {
+    "t": "2026-09-26T12:52:30+0200",
+    "faucet_tkas": 10713.3,
+    "utxos": 7461,
+    "mature": 5303,
+    "mature_tkas": 7716.2,
+    "storm_pool_tkas": 12066,
+    "low_for_s": 0
+  },
+  {
+    "t": "2026-09-26T13:02:39+0200",
+    "faucet_tkas": 4540.9,
+    "utxos": 3170,
+    "mature": 2585,
+    "mature_tkas": 2633.6,
+    "storm_pool_tkas": 0,
+    "low_for_s": 95
+  },
+  {
+    "t": "2026-09-26T13:08:26+0200",
+    "faucet_tkas": 4096.3,
+    "utxos": 3161,
+    "mature": 2642,
+    "mature_tkas": 2591.7,
+    "storm_pool_tkas": 0,
+    "low_for_s": 442
+  },
+  {
+    "t": "2026-09-26T13:17:59+0200",
+    "faucet_tkas": 4908.7,
+    "utxos": 3513,
+    "mature": 3069,
+    "mature_tkas": 3585.9,
+    "storm_pool_tkas": 0,
+    "low_for_s": 0
+  },
+  {
+    "t": "2026-09-26T13:18:31+0200",
+    "faucet_tkas": 5223.9,
+    "utxos": 3618,
+    "mature": 3180,
+    "mature_tkas": 3928.8,
+    "storm_pool_tkas": 0,
+    "low_for_s": 0
+  }
+]

@@ -1,0 +1,6 @@
+/workspace/tn10-break-test-2026-09-25/scripts/r5-stop.sh: line 9: /proc/3587342/cmdline: No such file or directory
+/workspace/tn10-break-test-2026-09-25/scripts/r5-stop.sh: line 9: /proc/3587343/cmdline: No such file or directory
+/workspace/tn10-break-test-2026-09-25/scripts/r5-stop.sh: line 9: /proc/3587349/cmdline: No such file or directory
+/workspace/tn10-break-test-2026-09-25/scripts/r5-stop.sh: line 9: /proc/3587350/cmdline: No such file or directory
+/workspace/tn10-break-test-2026-09-25/scripts/r5-stop.sh: line 9: /proc/3587351/cmdline: No such file or directory
+stopped: 2855594

@@ -1,0 +1,82 @@
+{
+  "A": {
+    "created": 771,
+    "commit_fail": 486,
+    "reveal_fail": 6,
+    "last_rep": {
+      "t": "2026-09-26T10:29:38.742Z",
+      "ev": "rep",
+      "attempts": 1748,
+      "created": 771,
+      "unavailable": 0,
+      "commit_fail": 486,
+      "reveal_fail": 6,
+      "fund_fail": 2,
+      "check_fail": 2,
+      "lat": [],
+      "lat_p50": null,
+      "lat_p95": null,
+      "lat_n": 0,
+      "feerate_now": 387
+    },
+    "tkas_est_35": 26985
+  },
+  "B": {
+    "created_events": 1111,
+    "tkas_kns_sum_prices": 107135,
+    "by_len_created": {
+      "2": 5,
+      "3": 13,
+      "4": 42,
+      "5": 196,
+      "6": 235,
+      "7": 210,
+      "8": 223,
+      "15": 187
+    },
+    "commit_fail_events": 11,
+    "reveal_fail_events": 0,
+    "starts": 5,
+    "final_done": {
+      "t": "2026-09-26T11:16:19.469Z",
+      "ev": "done",
+      "attempts": 779,
+      "created": 768,
+      "taken": 53,
+      "invalid": 0,
+      "retries": 1,
+      "len_exhausted": 2,
+      "check_calls": 31,
+      "check_fail": 0,
+      "rate_limited": 0,
+      "commit_fail": 11,
+      "reveal_fail": 0,
+      "fund_fail": 0,
+      "unaffordable": 5901,
+      "owner_ok": 0,
+      "owner_bad": 0,
+      "owner_unk": 35,
+      "by_len_created": {
+        "3": 1,
+        "4": 22,
+        "5": 148,
+        "6": 159,
+        "7": 149,
+        "8": 156,
+        "15": 133
+      },
+      "by_len_drawn": {
+        "1": 2,
+        "2": 803,
+        "3": 822,
+        "4": 823,
+        "5": 802,
+        "6": 812,
+        "7": 811,
+        "8": 838,
+        "15": 670
+      },
+      "tkas_kns": 39725
+    }
+  }
+}
